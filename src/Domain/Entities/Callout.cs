@@ -4,10 +4,11 @@ namespace Domain.Entities
 {
     public class Callout
     {
-        public Callout() { }
-        public Guid CalloutId { get; private set; }
-        public Guid CustomerId { get; private set; }
+        public Guid CalloutId { get; set; }
+        public Guid CustomerId { get; set; }
+        public DateTime EngineerToAttendOn { get; set; }
+        public string Reason { get; set; }
 
-        public Customer Customer { get; set; }
+        public virtual Customer Customer { get; set; }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Application;
+using Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -14,6 +15,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Persistence;
+using FluentValidation.AspNetCore;
+using Application.Common.Interfaces;
 
 namespace Presentation
 {
@@ -27,21 +30,26 @@ namespace Presentation
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddInfrastructure();
             services.AddPersistence(Configuration);
             services.AddApplication();
+
+            services.AddSwaggerDocument();
 
             services.AddHealthChecks();
 
             services.AddHttpContextAccessor();
 
+            services
+                .AddMvc()
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<IMediatRDemoDbContext>());
+
             _services = services;
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -55,12 +63,18 @@ namespace Presentation
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseOpenApi();
+            app.UseSwaggerUi3(settings =>
+            {
+                settings.Path = "/swagger";
+            });
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
+
+            RegisteredServicesPage(app);
         }
 
         private void RegisteredServicesPage(IApplicationBuilder app)

@@ -1,3 +1,4 @@
+using Application.Common.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,7 +12,7 @@ namespace Persistence
             services.AddDbContext<MediatRDemoDbContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("MediatRDemo")));
 
-            services.AddScoped<MediatRDemoDbContext>(provider => provider.GetService<MediatRDemoDbContext>());
+            services.AddScoped<IMediatRDemoDbContext>(provider => provider.GetService<MediatRDemoDbContext>());
 
             return services;
         }

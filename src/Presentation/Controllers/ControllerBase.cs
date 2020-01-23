@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Presentation.Controllers
 {
     [ApiController]
-    [Route("api/[controller]/[action]")]
+    [Route("api/[controller]")]
     public abstract class ControllerBase : Microsoft.AspNetCore.Mvc.ControllerBase
     {
         private IMediator _mediator;
