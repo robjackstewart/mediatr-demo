@@ -1,17 +1,19 @@
 using System;
+using System.Collections.Generic;
 
 namespace Domain.Entities
 {
     public class Customer
     {
-        public Customer(string firstName, string lastName)
+        public Customer()
         {
-            this.FirstName = firstName;
-            this.LastName = lastName;
+            Callouts = new HashSet<Callout>();
         }
 
-        public Guid CustomerId { get; private set; }
-        public string FirstName { get; private set; }
-        public string LastName { get; private set; }
+        public Guid CustomerId { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+
+        public ICollection<Callout> Callouts { get; private set; }
     }
 }
